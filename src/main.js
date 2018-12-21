@@ -280,7 +280,7 @@ loader.load(setup);
 
 let scale;
 let onResize = event => {
-	return (scale = scaleToWindow(app.renderer.view, "rebeccapurple"));
+	return (scale = scaleToWindow(app.renderer.view, "black"));
 };
 window.addEventListener("resize", onResize);
 onResize();

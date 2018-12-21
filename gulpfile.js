@@ -1,17 +1,30 @@
-let gulp = require("gulp");
-let browserSync = require("browser-sync").create();
+let gulp = require('gulp');
+let browserSync = require('browser-sync');
 
-gulp.task("browserSync", () => {
-	browserSync.init({
+const server = browserSync.create();
+
+const paths = {
+	scripts: {
+		src: 'src/**/*.js',
+		dest: 'dist/js/'
+	},
+	html: 'src/*.html'
+}
+
+function reload(done) {
+	server.reload();
+	done();
+};
+
+function serve(done) {
+	server.init({
 		server: {
-			baseDir: "src"
+			baseDir: 'src'
 		}
 	});
-});
+	done();
+}
 
-gulp.task("watch", gulp.parallel("browserSync"), () => {
-	gulp.watch("src/*.html", browserSync.reload);
-	gulp.watch("src/js/**/*.js", browserSync.reload);
-});
+const watch = () => gulp.watch([paths.scripts.src, paths.html], gulp.series(reload));
 
-gulp.task("default", gulp.series("watch", "browserSync"));
+gulp.task("default", gulp.series(serve, watch));
