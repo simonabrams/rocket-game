@@ -1,0 +1,17 @@
+{
+  "name": "rocket",
+  "version": "1.0.0",
+  "description": "Rocket game!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp"
+  },
+  "author": "Simon Abrams",
+  "license": "ISC",
+  "dependencies": {
+    "browser-sync": "^2.26.3",
+    "gulp": "^4.0.0",
+    "run-sequence": "^2.2.1"
+  }
+}
