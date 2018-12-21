@@ -100,11 +100,11 @@ let setup = () => {
 			z: 0,
 			x: 0,
 			y: 0,
-			vy: 1
+			vy: (Math.random() + 1) * 0.6
 		};
 		star.sprite.anchor.x = 0.5;
 		star.sprite.anchor.y = 0.5;
-		randomizeStar(star.sprite, true);
+		randomizeStar(star.sprite);
 		app.stage.addChild(star.sprite);
 		stars.push(star);
 	}
@@ -259,18 +259,10 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function randomizeStar(star, initial) {
-	star.z = initial
-		? Math.random() * 2000
-		: cameraZ + Math.random() * 1000 + 2000;
-
-	//Calculate star positions with radial random coordinate so no star hits the camera.
-	var deg = Math.random() * Math.PI * 2;
-	var distance = Math.random() * 50 + 1;
-	// star.x = Math.cos(deg) * distance;
-	// star.y = Math.sin(deg) * distance;
+function randomizeStar(star) {
 	star.x = randomInt(0, app.screen.width);
 	star.y = randomInt(0, app.screen.height);
+	star.vy = Math.random() + 1;
 	star.alpha = Math.random();
 }
 
