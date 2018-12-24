@@ -6,6 +6,7 @@ let App = PIXI.Application,
 	Sprite = PIXI.Sprite,
 	Graphics = PIXI.Graphics,
 	TextureCache = PIXI.utils.TextureCache;
+MovieClip = PIXI.extras.AnimatedSprite;
 
 let app = new App({
 	width: 417,
@@ -16,12 +17,15 @@ let app = new App({
 	autoResize: true,
 	backgroundColor: 0x202124
 });
+app.stage.interactive = true;
+
+let su = new SpriteUtilities(PIXI);
 
 //Add the canvas to the HTML document
 document.body.appendChild(app.view);
 
 // units
-let state, rocket;
+let state, rocket, rocketInnerContainer, rocketOuterContainer, id;
 
 // load resources
 let loadProgressHandler = (loader, resource) => {
@@ -86,6 +90,8 @@ let starAmount = 350,
 let stars = [];
 
 let setup = () => {
+	id = resources["images/rocket.json"].textures;
+
 	// stars!
 	let starShape = new Graphics();
 	starShape.beginFill(0xffffff);
@@ -110,34 +116,75 @@ let setup = () => {
 	}
 
 	// rocket
-	rocket = new Graphics();
-	rocket.beginFill(0x0033cc);
-	rocket.drawRect(0, 0, 96, 96);
-	rocket.endFill();
-	rocket.x = app.screen.width / 2 - rocket.width / 2;
-	rocket.y = app.screen.height - rocket.height - 100;
+	rocket = new Container();
+	rocketOuterContainer = new Container();
 
-	// init velocity props
-	rocket.vx = 0;
-	rocket.vy = 0;
+	let rocketBody = new Sprite(id["rocket_body.png"]);
+	let rocketWindow = new Sprite(id["window.png"]);
+	rocketWindow.x = rocketBody.width / 2 - rocketWindow.width / 2;
+	rocketWindow.y = rocketBody.height / 3;
+
+	let flame = new Sprite(id["flame.png"]);
+	flame.x = rocketBody.width / 2 - flame.width / 2;
+	flame.y = rocketBody.height - 5;
+
+	let wingFrames = su.frameSeries(0, 18, "wing_sprite-", ".png");
+	let wingSprite = new MovieClip(wingFrames);
+
+	wingSprite.x = rocketBody.width / 2 - wingSprite.width / 2;
+	wingSprite.y = rocketBody.height - 48;
 
 	// acceleration + friction
 	rocket.accelerationX = 0;
 	rocket.frictionX = 1;
+	rocket.accelerationY = 0;
+	rocket.frictionY = 1;
 	rocket.speed = 0.2;
-	rocket.drag = 0.98;
+	rocket.drag = 0.4;
 
+	rocket.addChild(flame);
+	rocket.addChild(rocketBody);
+	rocket.addChild(rocketWindow);
+	rocket.addChild(wingSprite);
+
+	// init velocity props and position
+	rocket.scale.set(0.5);
+	rocket.x = app.screen.width / 2 - rocket.width / 2;
+	rocket.y = app.screen.height - rocket.height - 100;
+	rocket.vx = 0;
+	rocket.vy = 0;
+
+	// rocketOuterContainer.addChild(rocket);
 	app.stage.addChild(rocket);
+
+	// background
+	let saturn = new Sprite(id["planet_saturn.png"]);
+	let mars = new Sprite(id["planet_mars.png"]);
+	saturn.scale.set(0.5);
+	mars.scale.set(0.5);
+
+	app.stage.addChild(saturn);
+	app.stage.addChild(mars);
 
 	// keyboard
 	let left = keyboard("ArrowLeft"),
-		right = keyboard("ArrowRight");
+		right = keyboard("ArrowRight"),
+		up = keyboard("ArrowUp"),
+		down = keyboard("ArrowDown");
+
+	let wingReversed = false;
 
 	// left key press
 	left.press = () => {
 		// rocket.vx = -5;
 		rocket.accelerationX = -rocket.speed;
 		rocket.frictionX = 1;
+
+		if (!wingReversed){
+			wingFrames.reverse();
+			wingReversed = true;
+		}
+		wingSprite.play();
 	};
 
 	left.release = () => {
@@ -146,6 +193,9 @@ let setup = () => {
 			rocket.accelerationX = 0;
 			rocket.frictionX = rocket.drag;
 		}
+		wingFrames.reverse();
+		wingReversed = false;
+		wingSprite.gotoAndStop(0);
 	};
 
 	// right key press
@@ -153,6 +203,8 @@ let setup = () => {
 		// rocket.vx = 5;
 		rocket.accelerationX = rocket.speed;
 		rocket.frictionX = 1;
+
+		wingSprite.play();
 	};
 
 	right.release = () => {
@@ -160,6 +212,33 @@ let setup = () => {
 			// rocket.vx = 0;
 			rocket.accelerationX = 0;
 			rocket.frictionX = rocket.drag;
+		}
+		wingSprite.gotoAndStop(0);
+	};
+
+	// up key press
+	up.press = () => {
+		rocket.accelerationY = -rocket.speed;
+		rocket.frictionY = 1;
+	};
+
+	up.release = () => {
+		if (!down.isDown) {
+			rocket.accelerationY = 0;
+			rocket.frictionY = rocket.drag;
+		}
+	};
+
+	// down key press
+	down.press = () => {
+		rocket.accelerationY = rocket.speed;
+		rocket.frictionY = 1;
+	};
+
+	down.release = () => {
+		if (!up.isDown) {
+			rocket.accelerationY = 0;
+			rocket.frictionY = rocket.drag;
 		}
 	};
 
@@ -174,8 +253,10 @@ let gameLoop = delta => {
 let play = delta => {
 	// add acceleration to velocity
 	rocket.vx += rocket.accelerationX;
+	rocket.vy += rocket.accelerationY;
 	// add friction
 	rocket.vx *= rocket.frictionX;
+	rocket.vy *= rocket.frictionY;
 
 	let collision = contain(rocket, {
 		x: 0,
@@ -203,6 +284,11 @@ let play = delta => {
 	// update velocity
 	rocket.vx = rocket.vx;
 	rocket.x += rocket.vx;
+
+	rocket.vy = rocket.vy;
+	rocket.y += rocket.vy;
+
+	// jiggle
 
 	// starz
 	//Simple easing. This should be changed to proper easing function when used for real.
@@ -268,7 +354,10 @@ function randomizeStar(star) {
 
 // kick it off!
 
-loader.load(setup);
+loader
+	.add(["images/rocket.json"])
+	.on("progress", loadProgressHandler)
+	.load(setup);
 
 let scale;
 let onResize = event => {
