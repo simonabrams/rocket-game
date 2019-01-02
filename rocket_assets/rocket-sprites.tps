@@ -234,6 +234,7 @@
                 <false/>
             </struct>
             <key type="filename">rocket_body.png</key>
+            <key type="filename">rocket_body_mask.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>

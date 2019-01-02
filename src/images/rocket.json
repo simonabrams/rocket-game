@@ -2,7 +2,7 @@
 
 "flame.png":
 {
-	"frame": {"x":1705,"y":466,"w":58,"h":70},
+	"frame": {"x":1720,"y":471,"w":58,"h":70},
 	"rotated": true,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":58,"h":70},
@@ -10,7 +10,7 @@
 },
 "particle.png":
 {
-	"frame": {"x":1774,"y":1,"w":14,"h":14},
+	"frame": {"x":1819,"y":45,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -18,7 +18,7 @@
 },
 "planet_mars.png":
 {
-	"frame": {"x":1697,"y":526,"w":52,"h":52},
+	"frame": {"x":1707,"y":531,"w":52,"h":52},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":52},
@@ -26,7 +26,7 @@
 },
 "planet_saturn.png":
 {
-	"frame": {"x":1705,"y":406,"w":92,"h":58},
+	"frame": {"x":1720,"y":411,"w":92,"h":58},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":92,"h":58},
@@ -40,9 +40,17 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":88,"h":236},
 	"sourceSize": {"w":88,"h":236}
 },
+"rocket_body_mask.png":
+{
+	"frame": {"x":1464,"y":239,"w":88,"h":236},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":88,"h":236},
+	"sourceSize": {"w":88,"h":236}
+},
 "star.png":
 {
-	"frame": {"x":1777,"y":466,"w":18,"h":18},
+	"frame": {"x":1792,"y":471,"w":18,"h":18},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":18},
@@ -50,7 +58,7 @@
 },
 "star_glow.png":
 {
-	"frame": {"x":1749,"y":163,"w":30,"h":30},
+	"frame": {"x":1787,"y":45,"w":30,"h":30},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
@@ -66,7 +74,7 @@
 },
 "window.png":
 {
-	"frame": {"x":1751,"y":526,"w":42,"h":42},
+	"frame": {"x":1787,"y":1,"w":42,"h":42},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":42,"h":42},
@@ -74,15 +82,15 @@
 },
 "wing_sprite-0.png":
 {
-	"frame": {"x":1464,"y":239,"w":117,"h":79},
-	"rotated": true,
+	"frame": {"x":1554,"y":1,"w":117,"h":79},
+	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":79},
 	"sourceSize": {"w":118,"h":79}
 },
 "wing_sprite-1.png":
 {
-	"frame": {"x":1554,"y":1,"w":112,"h":79},
+	"frame": {"x":1673,"y":1,"w":112,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":1,"y":0,"w":112,"h":79},
@@ -90,23 +98,23 @@
 },
 "wing_sprite-2.png":
 {
-	"frame": {"x":1554,"y":82,"w":108,"h":79},
-	"rotated": false,
+	"frame": {"x":1545,"y":477,"w":108,"h":79},
+	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":4,"y":0,"w":108,"h":79},
 	"sourceSize": {"w":118,"h":79}
 },
 "wing_sprite-3.png":
 {
-	"frame": {"x":1464,"y":468,"w":103,"h":79},
-	"rotated": true,
+	"frame": {"x":1554,"y":163,"w":103,"h":79},
+	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":6,"y":0,"w":103,"h":79},
 	"sourceSize": {"w":118,"h":79}
 },
 "wing_sprite-4.png":
 {
-	"frame": {"x":1554,"y":163,"w":98,"h":79},
+	"frame": {"x":1554,"y":244,"w":98,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":9,"y":0,"w":98,"h":79},
@@ -114,15 +122,15 @@
 },
 "wing_sprite-5.png":
 {
-	"frame": {"x":1545,"y":244,"w":92,"h":79},
-	"rotated": false,
+	"frame": {"x":1754,"y":163,"w":92,"h":79},
+	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":12,"y":0,"w":92,"h":79},
 	"sourceSize": {"w":118,"h":79}
 },
 "wing_sprite-6.png":
 {
-	"frame": {"x":1639,"y":244,"w":87,"h":79},
+	"frame": {"x":1654,"y":244,"w":87,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":14,"y":0,"w":87,"h":79},
@@ -130,7 +138,7 @@
 },
 "wing_sprite-7.png":
 {
-	"frame": {"x":1634,"y":325,"w":83,"h":79},
+	"frame": {"x":1635,"y":406,"w":83,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":16,"y":0,"w":83,"h":79},
@@ -138,15 +146,15 @@
 },
 "wing_sprite-8.png":
 {
-	"frame": {"x":1545,"y":487,"w":77,"h":79},
-	"rotated": false,
+	"frame": {"x":1728,"y":332,"w":77,"h":79},
+	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":19,"y":0,"w":77,"h":79},
 	"sourceSize": {"w":118,"h":79}
 },
 "wing_sprite-9.png":
 {
-	"frame": {"x":1624,"y":487,"w":71,"h":79},
+	"frame": {"x":1761,"y":82,"w":71,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":22,"y":0,"w":71,"h":79},
@@ -154,23 +162,23 @@
 },
 "wing_sprite-10.png":
 {
-	"frame": {"x":1728,"y":244,"w":69,"h":79},
-	"rotated": false,
+	"frame": {"x":1554,"y":406,"w":69,"h":79},
+	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":23,"y":0,"w":69,"h":79},
 	"sourceSize": {"w":118,"h":79}
 },
 "wing_sprite-11.png":
 {
-	"frame": {"x":1630,"y":406,"w":73,"h":79},
-	"rotated": false,
+	"frame": {"x":1743,"y":257,"w":73,"h":79},
+	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":21,"y":0,"w":73,"h":79},
 	"sourceSize": {"w":118,"h":79}
 },
 "wing_sprite-12.png":
 {
-	"frame": {"x":1719,"y":325,"w":79,"h":79},
+	"frame": {"x":1626,"y":487,"w":79,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":18,"y":0,"w":79,"h":79},
@@ -178,7 +186,7 @@
 },
 "wing_sprite-13.png":
 {
-	"frame": {"x":1545,"y":406,"w":83,"h":79},
+	"frame": {"x":1643,"y":325,"w":83,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":16,"y":0,"w":83,"h":79},
@@ -186,7 +194,7 @@
 },
 "wing_sprite-14.png":
 {
-	"frame": {"x":1545,"y":325,"w":87,"h":79},
+	"frame": {"x":1554,"y":325,"w":87,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":14,"y":0,"w":87,"h":79},
@@ -194,7 +202,7 @@
 },
 "wing_sprite-15.png":
 {
-	"frame": {"x":1654,"y":163,"w":93,"h":79},
+	"frame": {"x":1659,"y":163,"w":93,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":11,"y":0,"w":93,"h":79},
@@ -202,7 +210,7 @@
 },
 "wing_sprite-16.png":
 {
-	"frame": {"x":1664,"y":82,"w":99,"h":79},
+	"frame": {"x":1660,"y":82,"w":99,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":8,"y":0,"w":99,"h":79},
@@ -210,7 +218,7 @@
 },
 "wing_sprite-17.png":
 {
-	"frame": {"x":1668,"y":1,"w":104,"h":79},
+	"frame": {"x":1554,"y":82,"w":104,"h":79},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":6,"y":0,"w":104,"h":79},
@@ -218,7 +226,7 @@
 },
 "wing_sprite-18.png":
 {
-	"frame": {"x":1464,"y":358,"w":108,"h":79},
+	"frame": {"x":1464,"y":477,"w":108,"h":79},
 	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":4,"y":0,"w":108,"h":79},
@@ -232,8 +240,8 @@
 	"version": "1.0",
 	"image": "rocket.png",
 	"format": "RGBA8888",
-	"size": {"w":1799,"h":586},
+	"size": {"w":1834,"h":586},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:e37a5c2eb172a9bdee019b45aa614054:02c82d876a9db274c9a3a7642bae2f1b:d34c1cc7703551cadef84e84b2435060$"
+	"smartupdate": "$TexturePacker:SmartUpdate:dfcbc72a501d98a4a1831e75a8692699:3d469052fddc9031c1a0b2a6715c2d63:d34c1cc7703551cadef84e84b2435060$"
 }
 }

@@ -20,12 +20,35 @@ let app = new App({
 app.stage.interactive = true;
 
 let su = new SpriteUtilities(PIXI);
+let t = new Tink(PIXI, app.view);
 
 //Add the canvas to the HTML document
 document.body.appendChild(app.view);
 
-// units
-let state, rocket, rocketInnerContainer, rocketOuterContainer, id;
+// init globals
+let state,
+	rocket,
+	rocketOuterContainer,
+	rocketWindow,
+	flame,
+	saturn,
+	mars,
+	id;
+
+let starAmount = 350, // bg star amount
+	fgStarAmount = 8, // foreground yellow stars
+	fgStarContainer,
+	cameraZ = 0,
+	fov = 20,
+	starBaseSpeed = 0.025,
+	starSpeed = 0,
+	warpSpeed = 0,
+	starStretch = 5,
+	starBaseSize = 0.05;
+
+// play
+let stars = [],
+	fgStars = [];
 
 // load resources
 let loadProgressHandler = (loader, resource) => {
@@ -77,17 +100,6 @@ function keyboard(value) {
 	return key;
 }
 
-let starAmount = 350,
-	cameraZ = 0,
-	fov = 20,
-	starBaseSpeed = 0.025,
-	starSpeed = 0,
-	warpSpeed = 0,
-	starStretch = 5,
-	starBaseSize = 0.05;
-
-// play
-let stars = [];
 
 let setup = () => {
 	id = resources["images/rocket.json"].textures;
@@ -99,40 +111,68 @@ let setup = () => {
 	starShape.endFill();
 
 	let starTexture = starShape.generateTexture();
+	// generate background stars
+	makeStars(starTexture, starAmount, stars);
 
-	for (let i = 0; i < starAmount; i++) {
-		let star = {
-			sprite: new Sprite(starTexture),
-			z: 0,
-			x: 0,
-			y: 0,
-			vy: (Math.random() + 1) * 0.6
-		};
-		star.sprite.anchor.x = 0.5;
-		star.sprite.anchor.y = 0.5;
-		randomizeStar(star.sprite);
-		app.stage.addChild(star.sprite);
-		stars.push(star);
-	}
+	// foreground stars
+	makeStars(null, fgStarAmount, fgStars);
+
+	// planets
+	saturn = new Sprite(id["planet_saturn.png"]);
+	saturn.vy = 0.4;
+	mars = new Sprite(id["planet_mars.png"]);
+	saturn.scale.set(0.4);
+	mars.scale.set(0.5);
+
+	randomizeStar(mars, false);
+	randomizeStar(saturn, false);
+
+	app.stage.addChild(saturn);
+	app.stage.addChild(mars);
 
 	// rocket
 	rocket = new Container();
 	rocketOuterContainer = new Container();
 
 	let rocketBody = new Sprite(id["rocket_body.png"]);
-	let rocketWindow = new Sprite(id["window.png"]);
-	rocketWindow.x = rocketBody.width / 2 - rocketWindow.width / 2;
-	rocketWindow.y = rocketBody.height / 3;
+	rocket.center = rocketBody.width/2;
 
-	let flame = new Sprite(id["flame.png"]);
-	flame.x = rocketBody.width / 2 - flame.width / 2;
-	flame.y = rocketBody.height - 5;
+	rocketWindow = new Sprite(id["window.png"]);
+	rocketWindow.anchor.set(0.5);
+	rocketWindow.x = rocketBody.width / 2;
+	rocketWindow.y = rocketBody.height / 2;
+
+	// window move distance for turning
+
+	rocketWindow.maxDist = rocketBody.width /2;
+	// rocketWindow.x += rocketWindow.maxDist;
+
+	let windowMask = new Sprite (id["rocket_body_mask.png"]);
+	rocketWindow.mask = windowMask;
+
+	flame = new Sprite(id["flame.png"]);
+	flame.x = rocketBody.width / 2;
+	flame.y = rocketBody.height - 8;
+	flame.anchor.y = 0;
+	flame.anchor.x = 0.5;
+
+	flame.maxStretch = 1.1;
+	let flameTl = new TimelineMax();
+	flameTl.to(flame, 0.08, {
+		pixi: {
+			y: "+=4",
+			scaleY: flame.maxStretch
+		},
+		yoyo: true,
+		repeat: -1
+	});
 
 	let wingFrames = su.frameSeries(0, 18, "wing_sprite-", ".png");
-	let wingSprite = new MovieClip(wingFrames);
+	let wingSprite = su.sprite(wingFrames);
 
 	wingSprite.x = rocketBody.width / 2 - wingSprite.width / 2;
 	wingSprite.y = rocketBody.height - 48;
+	wingSprite.loop = false;
 
 	// acceleration + friction
 	rocket.accelerationX = 0;
@@ -145,6 +185,7 @@ let setup = () => {
 	rocket.addChild(flame);
 	rocket.addChild(rocketBody);
 	rocket.addChild(rocketWindow);
+	rocket.addChild(windowMask);
 	rocket.addChild(wingSprite);
 
 	// init velocity props and position
@@ -156,16 +197,14 @@ let setup = () => {
 
 	// rocketOuterContainer.addChild(rocket);
 	app.stage.addChild(rocket);
+	TweenMax.from(rocket, 1, {
+		pixi: {
+			y: app.screen.height
+		},
+		ease: Power2.easeInOut
+	});
 
-	// background
-	let saturn = new Sprite(id["planet_saturn.png"]);
-	let mars = new Sprite(id["planet_mars.png"]);
-	saturn.scale.set(0.5);
-	mars.scale.set(0.5);
-
-	app.stage.addChild(saturn);
-	app.stage.addChild(mars);
-
+	////////////////////////////////////////////////////
 	// keyboard
 	let left = keyboard("ArrowLeft"),
 		right = keyboard("ArrowRight"),
@@ -176,15 +215,14 @@ let setup = () => {
 
 	// left key press
 	left.press = () => {
-		// rocket.vx = -5;
 		rocket.accelerationX = -rocket.speed;
 		rocket.frictionX = 1;
 
-		if (!wingReversed){
+		if (!wingReversed) {
 			wingFrames.reverse();
 			wingReversed = true;
 		}
-		wingSprite.play();
+		wingSprite.playAnimation(0, 3);
 	};
 
 	left.release = () => {
@@ -195,25 +233,26 @@ let setup = () => {
 		}
 		wingFrames.reverse();
 		wingReversed = false;
-		wingSprite.gotoAndStop(0);
+		wingSprite.stopAnimation();
+		wingSprite.show(0);
 	};
 
 	// right key press
 	right.press = () => {
-		// rocket.vx = 5;
 		rocket.accelerationX = rocket.speed;
 		rocket.frictionX = 1;
 
-		wingSprite.play();
+		wingSprite.playAnimation(0, 6);
+
 	};
 
 	right.release = () => {
 		if (!left.isDown) {
-			// rocket.vx = 0;
 			rocket.accelerationX = 0;
 			rocket.frictionX = rocket.drag;
 		}
-		wingSprite.gotoAndStop(0);
+		wingSprite.stopAnimation();
+		wingSprite.show(0);
 	};
 
 	// up key press
@@ -288,21 +327,62 @@ let play = delta => {
 	rocket.vy = rocket.vy;
 	rocket.y += rocket.vy;
 
-	// jiggle
-
 	// starz
-	//Simple easing. This should be changed to proper easing function when used for real.
 	starSpeed += (warpSpeed - starSpeed) / 20;
-	cameraZ += delta * 10 * (starSpeed + starBaseSpeed);
-	for (var i = 0; i < starAmount; i++) {
-		var star = stars[i];
-		star.sprite.y += star.vy;
-		star.sprite.scale.y = 1.5;
-		if (star.sprite.y > app.screen.height) {
-			star.sprite.y = 0;
-		}
+	// cameraZ += delta * 10 * (starSpeed + starBaseSpeed);
+	// animate background stars
+	for (let i = 0; i < starAmount; i++) {
+		let star = stars[i];
+		starsAnim(star.sprite);
 	}
+	for (let j = 0; j < fgStarAmount; j++) {
+		let fgStar = fgStars[j];
+		starsAnim(fgStar);
+	}
+	// animate planets
+	starsAnim(mars);
+	starsAnim(saturn);
 };
+
+function makeStars(texture, amount, holderArray) {
+	let star;
+	// if we're passing in a star sprite
+	for (let i = 0; i < amount; i++) {
+		if (texture) {
+			star = {
+				sprite: new Sprite(texture),
+				z: 0,
+				x: 0,
+				y: 0,
+				vy: (Math.random()) * 0.01
+			};
+			console.log(star.vy)
+			star.sprite.anchor.set(0.5);
+			app.stage.addChild(star.sprite);
+			randomizeStar(star.sprite);
+		} else {
+			star = new Container();
+			let starGlow = new Sprite(id["star_glow.png"]);
+			let starGraphic = new Sprite(id["star.png"]);
+			starGlow.anchor.set(0.5);
+			starGraphic.anchor.set(0.5);
+			star.addChild(starGlow);
+			star.addChild(starGraphic);
+			star.scale.set(randomInt(2, 6) * 0.1);
+			star.vy = (Math.random() + 1) * 0.6;
+			app.stage.addChild(star);
+			randomizeStar(star, false);
+		}
+		holderArray.push(star);
+	}
+}
+
+function starsAnim(star) {
+	star.y += star.vy;
+	if (star.y > app.screen.height) {
+		star.y = -20;
+	}
+}
 
 //The contain helper function
 function contain(sprite, container) {
@@ -329,10 +409,10 @@ function contain(sprite, container) {
 	}
 
 	//Bottom
-	if (sprite.y + sprite.height > container.height) {
-		sprite.y = container.height - sprite.height;
-		collision.add("bottom");
-	}
+	// if (sprite.y + sprite.height > container.height) {
+	// 	sprite.y = container.height - sprite.height;
+	// 	collision.add("bottom");
+	// }
 
 	//If there were no collisions, set `collision` to `undefined`
 	if (collision.size === 0) collision = undefined;
@@ -345,11 +425,11 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function randomizeStar(star) {
+function randomizeStar(star, fade = true) {
 	star.x = randomInt(0, app.screen.width);
 	star.y = randomInt(0, app.screen.height);
 	star.vy = Math.random() + 1;
-	star.alpha = Math.random();
+	if (fade) star.alpha = Math.random();
 }
 
 // kick it off!
