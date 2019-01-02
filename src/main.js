@@ -286,7 +286,10 @@ let setup = () => {
 	pointer = t.makePointer();
 	t.makeDraggable(rocket);
 
-	pointer.press = () => console.log("pointer pressed!")
+	pointer.press = () => {
+		console.log("pointer pressed!")
+
+	}
 
 	state = play;
 
