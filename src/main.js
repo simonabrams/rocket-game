@@ -20,7 +20,7 @@ let app = new App({
 app.stage.interactive = true;
 
 let su = new SpriteUtilities(PIXI);
-let t = new Tink(PIXI, app.view);
+let t;
 
 //Add the canvas to the HTML document
 document.body.appendChild(app.view);
@@ -281,6 +281,13 @@ let setup = () => {
 		}
 	};
 
+
+	// touch
+	pointer = t.makePointer();
+	t.makeDraggable(rocket);
+
+	pointer.press = () => console.log("pointer pressed!")
+
 	state = play;
 
 	app.ticker.add(delta => gameLoop(delta));
@@ -288,6 +295,8 @@ let setup = () => {
 // game loop
 let gameLoop = delta => {
 	state(delta);
+
+	t.update();
 };
 let play = delta => {
 	// add acceleration to velocity
@@ -356,7 +365,6 @@ function makeStars(texture, amount, holderArray) {
 				y: 0,
 				vy: (Math.random()) * 0.01
 			};
-			console.log(star.vy)
 			star.sprite.anchor.set(0.5);
 			app.stage.addChild(star.sprite);
 			randomizeStar(star.sprite);
@@ -440,8 +448,11 @@ loader
 	.load(setup);
 
 let scale;
+t = new Tink(PIXI, app.view, scale);
+
 let onResize = event => {
 	return (scale = scaleToWindow(app.renderer.view, "black"));
+	t.scale(scale);
 };
 window.addEventListener("resize", onResize);
 onResize();
